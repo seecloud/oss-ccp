@@ -29,7 +29,7 @@ Just run:
  
 N.B.! You should disable tls verification for docker private registry, or use self-signed certificates
 
-After these steps, you can clone [ccp repo](http://github.com/openstack/fuel-ccp), and install it with instructions. After config generation, you can start using our ccp definition:
+After these steps, you can clone [ccp repo](http://github.com/openstack/fuel-ccp), and install it with [instructions](http://fuel-ccp.readthedocs.io/en/latest/). After config generation, you can start using our ccp definition:
  - `ccp fetch` will clone our repos
  - `ccp build -c etcd ceagle health devops-portal` will build proper docker images
  - `ccp deploy -c etcd ceagle health-api health-job devops-portal` start these application in kubernetes

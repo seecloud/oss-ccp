@@ -8,11 +8,16 @@ up_registry () {
 }
 
 deploy_es () {
-  mkdir -p kube_es
-  pushd kube_es
+
+  if [[ $(kubectl get namespace | grep oss | wc -l) -lt 1 ]]; then
+    kubectl create namespace oss
+  fi
+
+  mkdir -p elasticsearch
+  pushd elasticsearch
   for YAML in service-account.yaml es-svc.yaml es-rc.yaml ; do
     wget https://raw.githubusercontent.com/kubernetes/kubernetes/master/examples/elasticsearch/$YAML
-    kubectl create -f $YAML
+    kubectl create -f $YAML --namespace=oss
   done
   popd
 
@@ -48,7 +53,7 @@ nodes:
       - frontend
       - backend
 kubernetes:
-  namespace: default
+  namespace: oss
   server: "https://kubernetes:8443"
   ca_cert: "$CA_CERT"
   cert_file: "$CERT_FILE"
@@ -86,15 +91,31 @@ roles:
     - health-job
     - availability-api
     - availability-watcher
-    - performance
 
 debug: true
 EOF
 }
 
+set_context() {
+  kubectl config set-context oss --namespace oss
+  kubectl config use-context oss
+}
 
-while getopts "gdu" opt ; do
+_help() {
+  echo "Help for this script:"
+  echo " -s - change kubectl context to oss"
+  echo " -g - generate configuration file for ccp"
+  echo " -d - deploy elasticsearch to kubernetes"
+  echo " -u - set up local registry"
+  echo " -h - show this help message"
+}
+
+
+while getopts "sgduh" opt ; do
   case $opt in
+    s)
+      set_context
+    ;;
     g)
       generate_config
     ;;
@@ -103,6 +124,10 @@ while getopts "gdu" opt ; do
     ;;
     u)
       up_registry
+    ;;
+    h)
+      set +x
+      _help
     ;;
     *)
     ;;
