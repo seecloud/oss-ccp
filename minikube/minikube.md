@@ -26,6 +26,7 @@ Just run:
  - `./minikube.sh -g` - for config generation
  - `./minikube.sh -u` - for registry creation
  - `./minikube.sh -d` - for ES deployment
+ - `./minikube.sh -s` - for changing kubectl context to oss
  
 N.B.! You should disable tls verification for docker private registry, or use self-signed certificates
 

@@ -13,10 +13,8 @@ deploy_es () {
     kubectl create namespace oss
   fi
 
-  mkdir -p elasticsearch
   pushd elasticsearch
   for YAML in service-account.yaml es-svc.yaml es-rc.yaml ; do
-    wget https://raw.githubusercontent.com/kubernetes/kubernetes/master/examples/elasticsearch/$YAML
     kubectl create -f $YAML --namespace=oss
   done
   popd
